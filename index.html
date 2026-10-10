@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>GAMI Corporation Indonesia | Export from the source</title>
+    <!-- versi: showcase-v3 -->
     <meta name="description" content="GAMI Corporation connects Indonesian coconut, botanical, and seafood supply with international buyers through clear specification and a practical export path." />
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="GAMI Corporation Indonesia | Export from the source" />
@@ -19,7 +20,7 @@
     <!-- ===== VIDEO SHOWCASE: STYLE ===== -->
     <style>
       #gami-showcase{
-        --g-bg:#f5f2ea; --g-green:#2c7a6b; --g-coral:#e8745a; --g-mint:#aee5d3; --g-dark:#072c3a;
+        --g-bg:#ddf0ea; --g-green:#2c7a6b; --g-coral:#e8745a; --g-mint:#aee5d3; --g-dark:#072c3a;
         --g-serif:Georgia,serif; --g-sans:system-ui,sans-serif; --g-mono:ui-monospace,Menlo,monospace;
         background:var(--g-bg); padding:clamp(56px,8vw,110px) 24px; position:relative; overflow:hidden;
       }
@@ -63,7 +64,7 @@
             '<h2>Straight from the <em>source.</em></h2>' +
             '<p class="gs-desc">Premium dried noni leaves, packed and labelled for export. Thirty seconds on what you actually receive.</p>' +
             '<ul class="gs-tags"><li>Morinda citrifolia</li><li>Dried leaves</li><li>Raw botanical</li></ul>' +
-            '<a class="gs-cta" href="#contact">Ask about noni leaves <span>↗</span></a>' +
+            '<a class="gs-cta" href="https://wa.me/6281241471095?text=Hello%20GAMI%2C%20I%20am%20interested%20in%20dried%20noni%20leaves." target="_blank" rel="noopener">Ask about noni leaves <span>↗</span></a>' +
           '</div>' +
           '<div class="gs-media">' +
             '<div class="gs-badge"><span>Export<br>ready</span></div>' +
@@ -101,43 +102,67 @@
               break;
             }
           }
-          var bg = css(document.querySelector('#root section'), 'backgroundColor');
         } catch (e) {}
       }
 
-      function insert() {
-        var hs = document.querySelectorAll('#root h1, #root h2');
-        var target = null, i;
-        for (i = 0; i < hs.length; i++) {
-          if (/product\s+in\s+mind/i.test(hs[i].textContent)) { target = hs[i]; break; }
+      function findTarget() {
+        var els = document.querySelectorAll('#root *'), best = null, i, j, hit;
+        for (i = 0; i < els.length; i++) {
+          if (/product\s*in\s*mind/i.test(els[i].textContent || '')) {
+            hit = false;
+            for (j = 0; j < els[i].children.length; j++) {
+              if (/product\s*in\s*mind/i.test(els[i].children[j].textContent || '')) { hit = true; break; }
+            }
+            if (!hit) { best = els[i]; break; }
+          }
         }
-        if (!target) return false;
-        var n = target;
-        while (n.parentElement && n.parentElement.id !== 'root' && n.parentElement.children.length < 4) n = n.parentElement;
-        if (document.getElementById('gami-showcase')) return true;
+        return best;
+      }
 
+      function build() {
         var sec = document.createElement('section');
         sec.id = 'gami-showcase';
         sec.innerHTML = HTML;
-        n.parentElement.insertBefore(sec, n);
-        matchTheme(sec);
+        return sec;
+      }
 
+      function wire(sec) {
+        matchTheme(sec);
         var v = sec.querySelector('video'), b = sec.querySelector('.gs-sound');
         b.addEventListener('click', function () {
-          v.muted = !v.muted; b.textContent = v.muted ? '🔇' : '🔊';
+          v.muted = !v.muted; b.textContent = v.muted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
           if (!v.muted) v.play();
         });
         if ('IntersectionObserver' in window) {
           new IntersectionObserver(function (e) {
-            e[0].isIntersecting ? v.play().catch(function(){}) : v.pause();
+            if (e[0].isIntersecting) { v.play().catch(function(){}); } else { v.pause(); }
           }, { threshold: 0.35 }).observe(v);
         }
+      }
+
+      function insert(force) {
+        if (document.getElementById('gami-showcase')) return true;
+        var target = findTarget();
+        var sec = build();
+        if (target) {
+          var n = target.closest('section');
+          if (!n) {
+            n = target;
+            while (n.parentElement && n.parentElement.id !== 'root' && n.parentElement.children.length < 4) n = n.parentElement;
+          }
+          n.parentElement.insertBefore(sec, n);
+        } else if (force) {
+          document.body.appendChild(sec);
+        } else {
+          return false;
+        }
+        wire(sec);
         return true;
       }
 
       var tries = 0;
       var t = setInterval(function () {
-        if (insert() || ++tries > 60) clearInterval(t);
+        tries++; if (insert(tries > 40)) clearInterval(t);
       }, 250);
     })();
     </script>

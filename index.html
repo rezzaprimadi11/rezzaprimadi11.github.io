@@ -18,5 +18,28 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- ===== VIDEO SECTION (muncul di bagian paling bawah halaman) ===== -->
+    <section id="gami-video" style="background:#0b2b36;padding:64px 20px;">
+      <div style="max-width:960px;margin:0 auto;text-align:center;">
+        <h2 style="font-family:Georgia,serif;font-weight:400;font-size:clamp(28px,5vw,44px);color:#f4f1ea;margin:0 0 12px;">
+          From the source: <em style="color:#e9825a;">Noni Leaves</em>
+        </h2>
+        <p style="font-family:sans-serif;color:#9fd8c8;margin:0 0 28px;">
+          See how our noni leaves are harvested and prepared.
+        </p>
+        <video
+          src="/videos/noni-leaves.mp4"
+          poster="/assets/noni-leaves.jpeg"
+          controls
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          style="width:100%;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);">
+        </video>
+      </div>
+    </section>
+    <!-- ===== END VIDEO SECTION ===== -->
   </body>
 </html>

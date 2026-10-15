@@ -65,3 +65,8 @@
   .gp-facts>div{grid-template-columns:1fr}
   .gp-cols{grid-template-columns:1fr}
 }
+
+/* v6: range section now has 2 cards (coconut + botanical) */
+@media (min-width: 768px) {
+  .range-grid { grid-template-columns: 1.3fr 1fr !important; }
+}
